@@ -5,7 +5,7 @@
 {% block content %}
 <h4 class="fw-bold mb-4" style="color: var(--app-primary);"><i class="bi bi-calendar-check"></i> Todas as reservas</h4>
 
-<div class="card shadow border-0 mb-3">
+<div class="card mb-3 animate-fade-in delay-1">
     <div class="card-body">
         <form method="get" class="row g-2 align-items-end">
             <div class="col-md-3">
@@ -36,11 +36,11 @@
     </div>
 </div>
 
-<div class="card shadow border-0">
+<div class="card animate-fade-in delay-2">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th>Data</th>
                         <th>Período</th>
@@ -64,7 +64,7 @@
                         <td>
                             {% if r.status == 'active' %}<span class="badge bg-success">Ativa</span>
                             {% elif r.status == 'cancelled' %}<span class="badge bg-secondary">Cancelada</span>
-                            {% else %}<span class="badge bg-dark">Finalizada</span>{% endif %}
+                            {% else %}<span class="badge text-bg-secondary">Finalizada</span>{% endif %}
                         </td>
                         <td class="text-end">
                             <div class="btn-group btn-group-sm">

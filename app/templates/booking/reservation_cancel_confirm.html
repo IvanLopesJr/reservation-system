@@ -5,9 +5,9 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8 col-xl-6">
-        <div class="card shadow border-0">
+        <div class="card animate-fade-in">
             <div class="card-body p-4 text-center">
-                <i class="bi bi-exclamation-triangle display-1 text-warning"></i>
+                <i class="bi bi-exclamation-triangle display-1" style="color: var(--amber);"></i>
                 <h4 class="fw-bold mt-3">Confirmar cancelamento</h4>
                 <p class="text-muted">Deseja cancelar a reserva de <strong>{{ reservation.room_position.code }}</strong> em <strong>{{ reservation.reservation_date|date:'d/m/Y' }}</strong> ({{ reservation.get_period_display }})?</p>
 

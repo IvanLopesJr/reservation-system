@@ -58,8 +58,8 @@ Ao fazer login, você vê:
    - **Manhã** — ocupa a posição apenas pela manhã
    - **Tarde** — ocupa a posição apenas à tarde
    - **Dia inteiro** — ocupa a posição o dia todo
-5. **Escolha a posição** — as posições disponíveis aparecem em **verde**. Clique em uma para selecionar. Posições ocupadas aparecem em **vermelho** e não podem ser clicadas
-6. **Opcional: vaga de estacionamento** — se houver vagas livres, aparecerá a opção **"Quero vaga de estacionamento"**. Marque a caixa e escolha a vaga desejada
+5. **Escolha a posição** — as posições disponíveis aparecem em **verde**. Clique em uma para selecionar (a borda muda para a **cor primária** do sistema). Posições ocupadas aparecem em **cinza** e não podem ser clicadas
+6. **Opcional: vaga de estacionamento** — se houver vagas livres **e seu perfil tiver permissão para usar estacionamento**, aparecerá a opção **"Quero vaga de estacionamento"**. Marque a caixa e escolha a vaga desejada
 7. Clique em **"Confirmar reserva"**
 
 Pronto! Você receberá um e-mail de confirmação (se o administrador tiver configurado o envio).
@@ -121,10 +121,11 @@ Acesse **"Usuários"** no menu **Administrar**.
 3. Opções:
    - **"Administrador"** — marque se a pessoa for administradora
    - **"Ativo"** — desmarque para criar como inativo
+   - **"Pode usar estacionamento"** — desmarque para usuários que não podem reservar vagas
    - **"Enviar credenciais"** — marque para enviar e-mail com os dados de acesso
 4. Clique em **"Salvar"**
 
-**Editar usuário:** clique no **lápis** ao lado do usuário na lista.
+**Editar usuário:** clique no **lápis** ao lado do usuário na lista. Você também pode alterar a permissão **"Pode usar estacionamento"**.
 
 **Ativar/Desativar:** clique no **ícone de play/pause** para bloquear ou liberar o acesso.
 
@@ -140,14 +141,16 @@ Acesse **"Salas"** no menu **Administrar**.
 
 **Salas:**
 - **Nova sala:** nome e descrição
-- **Editar:** alterar dados
-- **Ativar/Desativar:** desativar uma sala a remove da lista de opções na hora de reservar
+- **Editar:** alterar dados (ícone ✏️)
+- **Ativar/Desativar:** desativar uma sala a remove da lista de opções na hora de reservar (ícone ▶ / ⏸)
+- **Excluir:** clique no **ícone 🗑️** para remover a sala permanentemente (só permitido se não houver reservas ativas)
 
 **Posições (dentro de cada sala):**
 - Clique no **ícone de grade** para ver as posições de uma sala
 - **Nova posição:** código (ex: "A1", "B2"), descrição e status
-- **Editar:** alterar dados
-- **Alternar status:** cada clique alterna entre: Disponível → Bloqueada → Inativa → Disponível
+- **Editar:** alterar dados (ícone ✏️)
+- **Alternar status:** cada clique alterna entre: Disponível → Bloqueada → Inativa → Disponível (ícone 🔄)
+- **Excluir:** clique no **ícone 🗑️** para remover a posição permanentemente (só permitido se não houver reservas ativas)
 
 > Posições **Bloqueadas** ou **Inativas** não aparecem para reserva.
 
@@ -156,8 +159,9 @@ Acesse **"Salas"** no menu **Administrar**.
 Acesse **"Vagas"** no menu **Administrar**.
 
 - **Nova vaga:** código, tipo (Comum, Acessível, Visitante, Reservada), descrição e status
-- **Editar:** alterar dados
-- **Alternar status:** Disponível → Bloqueada → Inativa → Disponível
+- **Editar:** alterar dados (ícone ✏️)
+- **Alternar status:** Disponível → Bloqueada → Inativa → Disponível (ícone 🔄)
+- **Excluir:** clique no **ícone 🗑️** para remover a vaga permanentemente (só permitido se não houver reservas ativas)
 
 ### 5.5. Gerenciar Reservas
 
@@ -186,6 +190,7 @@ Acesse **"Configurações"** no menu **Administrar**.
 | Imagem de login | Imagem de fundo da tela de entrada |
 | Cores | Personalize as cores do sistema (primária, fundo, barra, etc.) |
 | Visibilidade do nome | Escolha onde mostrar o nome: barra, tela de login, rodapé |
+| Usar menu offcanvas no celular | Desmarque para usar o menu collapse padrão em vez do painel lateral |
 
 **E-mail (lado direito):**
 
@@ -235,7 +240,8 @@ Para cada ação, você vê: **quem fez**, **o que fez**, **quando** e **de qual
 |-------|-------------|
 | 👁 | Ver detalhes |
 | ✏️ | Editar |
-| ❌ | Cancelar / Excluir |
+| 🗑️ | Excluir permanentemente |
+| ❌ | Cancelar reserva |
 | ▶ / ⏸ | Ativar / Desativar |
 | 🔄 | Alternar status |
 | ⬇ | Baixar / Exportar |

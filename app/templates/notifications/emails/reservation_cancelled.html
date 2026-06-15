@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
-<body style="font-family: Arial, sans-serif; padding: 20px; background: #f8f9fa;">
-    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 30px;">
-        <h2 style="color: #0d6efd;">{{ app_name }}</h2>
+<body style="font-family: Arial, sans-serif; padding: 20px; background: #f5f0eb;">
+    <div style="max-width: 600px; margin: 0 auto; background: #fcfaf7; border-radius: 8px; padding: 30px;">
+        <h2 style="color: #1e2d4a;">{{ app_name }}</h2>
         <p>Sua reserva foi cancelada.</p>
         <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
-            <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Data</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{{ reservation.reservation_date|date:'d/m/Y' }}</td></tr>
-            <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Período</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{{ period_display }}</td></tr>
-            <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Posição</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{{ reservation.room_position.code }}</td></tr>
+            <tr><td style="padding: 8px; border-bottom: 1px solid #e8e0d8; font-weight: bold;">Data</td><td style="padding: 8px; border-bottom: 1px solid #e8e0d8;">{{ reservation.reservation_date|date:'d/m/Y' }}</td></tr>
+            <tr><td style="padding: 8px; border-bottom: 1px solid #e8e0d8; font-weight: bold;">Período</td><td style="padding: 8px; border-bottom: 1px solid #e8e0d8;">{{ period_display }}</td></tr>
+            <tr><td style="padding: 8px; border-bottom: 1px solid #e8e0d8; font-weight: bold;">Posição</td><td style="padding: 8px; border-bottom: 1px solid #e8e0d8;">{{ reservation.room_position.code }}</td></tr>
             {% if reservation.parking_spot %}
-            <tr><td style="padding: 8px; border-bottom: 1px solid #eee; font-weight: bold;">Vaga</td><td style="padding: 8px; border-bottom: 1px solid #eee;">{{ reservation.parking_spot.code }}</td></tr>
+            <tr><td style="padding: 8px; border-bottom: 1px solid #e8e0d8; font-weight: bold;">Vaga</td><td style="padding: 8px; border-bottom: 1px solid #e8e0d8;">{{ reservation.parking_spot.code }}</td></tr>
             {% endif %}
         </table>
         {% if reservation.cancellation_reason %}
         <p><strong>Motivo:</strong> {{ reservation.cancellation_reason }}</p>
         {% endif %}
         {% if organization_name %}
-        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="color: #6c757d; font-size: 12px; margin: 0;">{{ organization_name }}</p>
+        <hr style="border: none; border-top: 1px solid #e8e0d8; margin: 20px 0;">
+        <p style="color: #7a7369; font-size: 12px; margin: 0;">{{ organization_name }}</p>
         {% endif %}
     </div>
 </body>

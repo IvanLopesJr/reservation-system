@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head><meta charset="utf-8"></head>
-<body style="font-family: Arial, sans-serif; padding: 20px; background: #f8f9fa;">
-    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 30px;">
-        <h2 style="color: #0d6efd;">{{ app_name }}</h2>
+<body style="font-family: Arial, sans-serif; padding: 20px; background: #f5f0eb;">
+    <div style="max-width: 600px; margin: 0 auto; background: #fcfaf7; border-radius: 8px; padding: 30px;">
+        <h2 style="color: #1e2d4a;">{{ app_name }}</h2>
         <p>Este é um e-mail de teste enviado pela configuração SMTP do sistema {{ app_name }}.</p>
         <p><small>Host: {{ host }}</small></p>
         <p>Se você recebeu este e-mail, a configuração SMTP está funcionando corretamente.</p>
         {% if organization_name %}
-        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="color: #6c757d; font-size: 12px; margin: 0;">{{ organization_name }}</p>
+        <hr style="border: none; border-top: 1px solid #e8e0d8; margin: 20px 0;">
+        <p style="color: #7a7369; font-size: 12px; margin: 0;">{{ organization_name }}</p>
         {% endif %}
     </div>
 </body>

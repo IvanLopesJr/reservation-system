@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Posição{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-xl-5">
+        <div class="card animate-fade-in">
+            <div class="card-header" style="background-color: var(--semantic-error); color: white;">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Excluir Posição</h5>
+            </div>
+            <div class="card-body text-center">
+                <i class="bi bi-grid-3x3 display-3" style="color: var(--text-tertiary);"></i>
+                <p class="fw-bold mt-3">Tem certeza que deseja excluir permanentemente a posição <strong>{{ position.code }}</strong>?</p>
+                <p class="text-muted small">Esta ação é irreversível. As reservas associadas a esta posição serão removidas.</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{% url 'rooms:position_list' room.id %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Excluir permanentemente
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

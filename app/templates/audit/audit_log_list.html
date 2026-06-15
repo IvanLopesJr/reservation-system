@@ -5,11 +5,11 @@
 {% block content %}
 <h4 class="fw-bold mb-4" style="color: var(--app-primary);"><i class="bi bi-journal-text"></i> Registros de auditoria</h4>
 
-<div class="card shadow border-0">
+<div class="card animate-fade-in delay-1">
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0 small">
-                <thead class="table-light">
+                <thead>
                     <tr>
                         <th>Data/hora</th>
                         <th>Usuário</th>
@@ -26,7 +26,7 @@
                         <td>{{ log.user.get_full_name|default:log.user.email|default:'Sistema' }}</td>
                         <td><span class="badge bg-secondary">{{ log.action }}</span></td>
                         <td>{{ log.entity_type }}</td>
-                        <td>{{ log.description }}</td>
+                        <td>{{ log.description|truncatechars:80 }}</td>
                         <td class="text-muted">{{ log.ip_address|default:'-' }}</td>
                     </tr>
                     {% empty %}

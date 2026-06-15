@@ -1,9 +1,11 @@
 {% if user.is_authenticated %}
-<footer class="footer mt-auto py-3 bg-light border-top">
-    <div class="container text-center text-muted small">
-        {% if app_settings.show_app_name_footer %}
-            <span>{{ app_settings.organization_name|default:app_settings.app_name|default:'Sistema de Reservas' }}</span>
-        {% endif %}
+<footer class="footer mt-auto py-3 border-top">
+    <div class="container text-center small">
+        <span class="text-muted">
+            {% if app_settings.show_app_name_footer %}
+                {{ app_settings.organization_name|default:app_settings.app_name|default:'Sistema de Reservas' }}
+            {% endif %}
+        </span>
     </div>
 </footer>
 {% endif %}

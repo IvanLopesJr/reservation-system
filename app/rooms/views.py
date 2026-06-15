@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models.deletion import ProtectedError
+from booking.models import Reservation
 from .models import Room, RoomPosition
 from .forms import RoomForm, RoomPositionForm
 
@@ -111,3 +113,44 @@ def position_toggle_status_view(request, room_id, pk):
         position.save()
         messages.success(request, f'Status da posição {position.code} alterado para {position.get_status_display()}.')
     return redirect('rooms:position_list', room_id=room_id)
+
+
+@login_required
+@user_passes_test(is_admin)
+def room_delete_view(request, room_id):
+    room = get_object_or_404(Room, id=room_id)
+
+    if request.method == 'POST':
+        active = Reservation.objects.filter(
+            room_position__room=room, status='active'
+        ).exists()
+        if active:
+            messages.error(request, f'Não é possível excluir a sala "{room.name}" pois existem reservas ativas.')
+            return redirect('rooms:room_list')
+        try:
+            room.delete()
+            messages.success(request, f'Sala "{room.name}" excluída permanentemente.')
+        except ProtectedError:
+            messages.error(request, f'Não é possível excluir a sala "{room.name}" pois existem reservas vinculadas.')
+        return redirect('rooms:room_list')
+
+    return render(request, 'rooms/room_confirm_delete.html', {'room': room})
+
+
+@login_required
+@user_passes_test(is_admin)
+def position_delete_view(request, room_id, pk):
+    position = get_object_or_404(RoomPosition, id=pk, room_id=room_id)
+
+    if request.method == 'POST':
+        active = Reservation.objects.filter(
+            room_position=position, status='active'
+        ).exists()
+        if active:
+            messages.error(request, f'Não é possível excluir a posição "{position.code}" pois existem reservas ativas.')
+            return redirect('rooms:position_list', room_id=room_id)
+        position.delete()
+        messages.success(request, f'Posição "{position.code}" excluída permanentemente.')
+        return redirect('rooms:position_list', room_id=room_id)
+
+    return render(request, 'rooms/position_confirm_delete.html', {'room': position.room, 'position': position})

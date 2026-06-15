@@ -5,7 +5,7 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-8 col-xl-6">
-        <div class="card shadow border-0">
+        <div class="card animate-fade-in">
             <div class="card-body p-4">
                 <h4 class="fw-bold mb-4" style="color: var(--app-primary);">
                     {% if is_create %}<i class="bi bi-person-plus"></i> Novo usuário{% else %}<i class="bi bi-pencil"></i> Editar usuário{% endif %}
@@ -82,6 +82,13 @@
                             </div>
                             {% if form.is_staff.errors %}<div class="text-danger small mt-1">{{ form.is_staff.errors.0 }}</div>{% endif %}
                         </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="form-check">
+                                {{ form.can_use_parking }}
+                                <label class="form-check-label" for="{{ form.can_use_parking.id_for_label }}">{{ form.can_use_parking.label }}</label>
+                            </div>
+                            {% if form.can_use_parking.errors %}<div class="text-danger small mt-1">{{ form.can_use_parking.errors.0 }}</div>{% endif %}
+                        </div>
                     </div>
 
                     {% if is_create %}
@@ -104,7 +111,7 @@
                     {% endif %}
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+                        <button type="submit" class="btn btn-primary">
                             <i class="bi bi-check-lg"></i> {% if is_create %}Criar{% else %}Salvar{% endif %}
                         </button>
                         <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">Cancelar</a>

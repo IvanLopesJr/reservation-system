@@ -9,14 +9,18 @@
 {% block main %}
 <div class="d-flex align-items-center justify-content-center" style="min-height: 100vh;{% if app_settings.login_image %} background: url('{{ app_settings.login_image.url }}') center/cover no-repeat;{% endif %}">
     <div class="row justify-content-center w-100 mx-0" style="max-width: 400px;">
-        <div class="col-12">
-        <div class="card shadow border-0"{% if app_settings.login_image %} style="background: rgba(255,255,255,0.92); backdrop-filter: blur(4px);"{% endif %}>
+        <div class="col-12 animate-fade-in">
+        <div class="card{% if app_settings.login_image %} border-0{% endif %}"{% if app_settings.login_image %} style="background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);"{% endif %}>
             <div class="card-body p-4">
                 <div class="text-center mb-4">
                     {% if app_settings.logo %}
                         <img src="{{ app_settings.logo.url }}" alt="Logo" height="64" class="mb-3">
                     {% endif %}
-                    {% if app_settings.show_app_name_login %}<h4 class="fw-bold" style="color: var(--app-primary);">{{ app_settings.app_name|default:'Sistema de Reservas' }}</h4>{% endif %}
+                    {% if app_settings.show_app_name_login %}
+                        <h4 class="fw-bold" style="background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                            {{ app_settings.app_name|default:'Sistema de Reservas' }}
+                        </h4>
+                    {% endif %}
                     {% if app_settings.welcome_text %}
                         <p class="text-muted small">{{ app_settings.welcome_text }}</p>
                     {% endif %}
@@ -49,13 +53,13 @@
                         </div>
                     {% endif %}
 
-                    <button type="submit" class="btn btn-primary w-100 fw-semibold" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold">
                         <i class="bi bi-box-arrow-in-right"></i> Entrar
                     </button>
                 </form>
 
                 <div class="text-center mt-3">
-                    <a href="{% url 'accounts:password_reset' %}" class="text-decoration-none small">Esqueci minha senha</a>
+                    <a href="{% url 'accounts:password_reset' %}" class="text-decoration-none small" style="color: var(--text-tertiary);">Esqueci minha senha</a>
                 </div>
             </div>
             </div>

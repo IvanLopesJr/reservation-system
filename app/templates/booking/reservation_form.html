@@ -3,9 +3,9 @@
 {% block title %}Nova reserva{% endblock %}
 
 {% block content %}
-<h4 class="fw-bold mb-4" style="color: var(--app-primary);"><i class="bi bi-plus-circle"></i> Nova reserva</h4>
+<h4 class="fw-bold mb-4 animate-fade-in" style="color: var(--app-primary);"><i class="bi bi-plus-circle"></i> Nova reserva</h4>
 
-<div class="card shadow border-0">
+<div class="card animate-fade-in delay-1">
     <div class="card-body p-4">
         <form method="post" id="reservation-form" novalidate>
             {% csrf_token %}
@@ -58,7 +58,7 @@
             </div>
 
             <div class="mt-4" id="submit-container" style="display:none;">
-                <button type="submit" class="btn btn-primary" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+                <button type="submit" class="btn btn-primary">
                     <i class="bi bi-check-circle"></i> Confirmar reserva
                 </button>
             </div>
@@ -99,6 +99,8 @@
             return;
         }
 
+        positionsList.innerHTML = '<div class="col-12"><div class="shimmer shimmer-card"></div></div>';
+
         fetch(`{% url 'booking:available_positions' %}?room=${room}&date=${date}&period=${period}`)
             .then(r => r.json())
             .then(data => {
@@ -108,22 +110,16 @@
                     const isOccupied = p.status === 'occupied';
                     const col = document.createElement('div');
                     col.className = 'col-lg-2 col-md-3 col-6';
-                    const cardClass = isOccupied
-                        ? 'bg-danger bg-opacity-10'
-                        : 'bg-success bg-opacity-10 border-success border-opacity-25' + (selectedPosition === p.id ? ' border-primary' : '');
-                    const cardStyle = isOccupied
-                        ? 'opacity:0.6;cursor:not-allowed;'
-                        : 'cursor:pointer;' + (selectedPosition === p.id ? 'border-width:2px;' : '');
+                    const statusClass = isOccupied ? 'occupied' : (selectedPosition === p.id ? 'selected' : 'available');
                     col.innerHTML = `
-                        <div class="card position-card ${cardClass}"
-                             style="${cardStyle}"
+                        <div class="position-card ${statusClass} card py-2 px-1 mb-0"
                              data-id="${p.id}"
                              onclick="${isOccupied ? '' : 'selectPosition(' + p.id + ', this)'}">
-                            <div class="card-body text-center py-1">
+                            <div class="card-body text-center py-1 px-1">
                                 <div class="fw-semibold small">${p.code}</div>
                                 ${isOccupied
-                                    ? '<small class="text-danger">' + p.user + '<br>(' + p.period + ')<br><i class="bi bi-car-front-fill' + (p.parking_code ? '' : '" style="opacity:0.4"') + '"></i> ' + (p.parking_code ? p.parking_code : '0') + '</small>'
-                                    : '<small class="text-success" style="opacity:0.7">(Disponível)</small>'
+                                    ? '<small class="text-muted">' + p.user + '<br>(' + p.period + ')</small>'
+                                    : '<small class="text-muted" style="opacity:0.6">(Disponível)</small>'
                                 }
                             </div>
                         </div>`;
@@ -150,14 +146,14 @@
         selectedPosition = id;
         roomPositionInput.value = id;
         document.querySelectorAll('.position-card').forEach(c => {
-            c.classList.remove('border-primary');
-            c.classList.remove('bg-success', 'bg-opacity-10');
-            c.classList.add('border-success');
-            c.classList.add('bg-success', 'bg-opacity-10');
+            if (c.dataset.id == id) {
+                c.classList.remove('available');
+                c.classList.add('selected');
+            } else if (!c.classList.contains('occupied')) {
+                c.classList.remove('selected');
+                c.classList.add('available');
+            }
         });
-        el.classList.remove('border-success');
-        el.classList.add('border-primary');
-        el.style.borderWidth = '2px';
         wantsParking.checked = false;
         parkingContainer.style.display = 'none';
         parkingUnavailable.style.display = 'none';
@@ -172,22 +168,16 @@
             const isOccupied = s.status === 'occupied';
             const col = document.createElement('div');
             col.className = 'col-lg-2 col-md-3 col-6';
-            const cardClass = isOccupied
-                ? 'bg-danger bg-opacity-10'
-                : 'bg-success bg-opacity-10 border-success border-opacity-25' + (selectedParking === s.id ? ' border-primary' : '');
-            const cardStyle = isOccupied
-                ? 'opacity:0.6;cursor:not-allowed;'
-                : 'cursor:pointer;' + (selectedParking === s.id ? 'border-width:2px;' : '');
+            const statusClass = isOccupied ? 'occupied' : (selectedParking === s.id ? 'selected' : 'available');
             col.innerHTML = `
-                <div class="card parking-card ${cardClass}"
-                     style="${cardStyle}"
+                <div class="parking-card ${statusClass} card py-2 px-1 mb-0"
                      data-id="${s.id}"
                      onclick="${isOccupied ? '' : 'selectParking(' + s.id + ', this)'}">
-                    <div class="card-body text-center py-1">
+                    <div class="card-body text-center py-1 px-1">
                         <div class="fw-semibold small">${s.code}</div>
                         ${isOccupied
-                            ? '<small class="text-danger">' + s.user + '<br>(' + s.period + ')</small>'
-                            : '<small class="text-success" style="opacity:0.7">(Disponível)</small>'
+                            ? '<small class="text-muted">' + s.user + '<br>(' + s.period + ')</small>'
+                            : '<small class="text-muted" style="opacity:0.6">(Disponível)</small>'
                         }
                     </div>
                 </div>`;
@@ -208,6 +198,14 @@
         fetch(`{% url 'booking:available_parking_spots' %}?date=${date}&period=${period}`)
             .then(r => r.json())
             .then(data => {
+                if (data.blocked) {
+                    parkingToggle.style.display = 'none';
+                    parkingContainer.style.display = 'none';
+                    parkingUnavailable.style.display = 'none';
+                    selectedParking = null;
+                    parkingSpotInput.value = '';
+                    return;
+                }
                 const hasAvailable = data.spots.some(s => s.status === 'available');
                 if (hasAvailable) {
                     parkingToggle.style.display = 'block';
@@ -230,6 +228,7 @@
     function loadParkingSpots() {
         const date = dateInput.value;
         const period = periodSelect.value;
+        parkingList.innerHTML = '<div class="col-12"><div class="shimmer shimmer-card"></div></div>';
         fetch(`{% url 'booking:available_parking_spots' %}?date=${date}&period=${period}`)
             .then(r => r.json())
             .then(data => renderParkingSpots(data.spots));
@@ -239,14 +238,14 @@
         selectedParking = id;
         parkingSpotInput.value = id;
         document.querySelectorAll('.parking-card').forEach(c => {
-            c.classList.remove('border-primary');
-            c.classList.remove('bg-success', 'bg-opacity-10');
-            c.classList.add('border-success');
-            c.classList.add('bg-success', 'bg-opacity-10');
+            if (c.dataset.id == id) {
+                c.classList.remove('available');
+                c.classList.add('selected');
+            } else if (!c.classList.contains('occupied')) {
+                c.classList.remove('selected');
+                c.classList.add('available');
+            }
         });
-        el.classList.remove('border-success');
-        el.classList.add('border-primary');
-        el.style.borderWidth = '2px';
     }
 
     roomSelect.addEventListener('change', loadPositions);

@@ -82,6 +82,10 @@ def available_positions_view(request):
 
 @login_required
 def available_parking_spots_view(request):
+    profile = getattr(request.user, 'profile', None)
+    if profile and not profile.can_use_parking:
+        return JsonResponse({'spots': [], 'blocked': True})
+
     date_str = request.GET.get('date')
     period = request.GET.get('period')
 

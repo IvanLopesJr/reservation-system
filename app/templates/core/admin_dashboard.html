@@ -2,109 +2,111 @@
 
 {% block title %}Painel administrativo{% endblock %}
 
-{% block extra_head %}
-<style>
-@keyframes soft-pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.08); }
-}
-.pulse-icon { animation: soft-pulse 2s ease-in-out infinite; display: inline-block; }
-</style>
-{% endblock %}
-
 {% block content %}
-<h4 class="fw-bold mb-4" style="color: var(--app-primary);"><i class="bi bi-speedometer2"></i> Painel administrativo</h4>
+<h4 class="fw-bold mb-4 animate-fade-in" style="color: var(--app-primary);"><i class="bi bi-speedometer2"></i> Painel administrativo</h4>
 
 <div class="row g-3 mb-4">
-    <div class="col-4 col-lg-2">
-        <div class="card shadow border-0 text-center h-100">
+    <div class="col-4 col-lg-2 animate-fade-in delay-1">
+        <div class="card text-center h-100 card-hover-lift">
             <div class="card-body">
-                <i class="bi bi-calendar-check fs-1 pulse-icon" style="color: var(--app-primary);"></i>
-                <div class="display-5 fw-bold" style="color: var(--app-primary);">{{ today_reservations.count }}</div>
+                <div class="icon-circle-sm gradient-primary text-white mx-auto mb-1">
+                    <i class="bi bi-calendar-check fs-5"></i>
+                </div>
+                <div class="h3 fw-bold mb-0" style="color: var(--app-primary);">{{ today_reservations.count }}</div>
                 <div class="text-muted small text-nowrap">Reservas hoje</div>
             </div>
         </div>
     </div>
-    <div class="col-4 col-lg-2">
-        <div class="card shadow border-0 text-center h-100">
+    <div class="col-4 col-lg-2 animate-fade-in delay-2">
+        <div class="card text-center h-100 card-hover-lift">
             <div class="card-body">
-                <i class="bi bi-people fs-1 pulse-icon" style="color: var(--bs-indigo);"></i>
-                <div class="display-5 fw-bold" style="color: var(--bs-indigo);">{{ users_today }}</div>
+                <div class="icon-circle-sm" style="background: var(--semantic-info-bg); color: var(--cyan); margin: 0 auto 4px;">
+                    <i class="bi bi-people fs-5"></i>
+                </div>
+                <div class="h3 fw-bold mb-0" style="color: var(--cyan);">{{ users_today }}</div>
                 <div class="text-muted small text-nowrap">Usuários hoje</div>
             </div>
         </div>
     </div>
-    <div class="col-4 col-lg-2">
-        <div class="card shadow border-0 text-center h-100">
+    <div class="col-4 col-lg-2 animate-fade-in delay-3">
+        <div class="card text-center h-100 card-hover-lift">
             <div class="card-body">
-                <i class="bi bi-layout-three-columns fs-1 pulse-icon" style="color: var(--bs-success);"></i>
-                <div class="display-5 fw-bold text-success">{{ total_positions }}</div>
+                <div class="icon-circle-sm" style="background: var(--semantic-success-bg); color: var(--emerald); margin: 0 auto 4px;">
+                    <i class="bi bi-layout-three-columns fs-5"></i>
+                </div>
+                <div class="h3 fw-bold mb-0" style="color: var(--emerald);">{{ total_positions }}</div>
                 <div class="text-muted small text-nowrap">Posições totais</div>
             </div>
         </div>
     </div>
-    <div class="col-4 col-lg-2">
-        <div class="card shadow border-0 text-center h-100">
+    <div class="col-4 col-lg-2 animate-fade-in delay-4">
+        <div class="card text-center h-100 card-hover-lift">
             <div class="card-body">
-                <i class="bi bi-car-front fs-1 pulse-icon" style="color: var(--bs-info);"></i>
-                <div class="display-5 fw-bold text-info">{{ total_spots }}</div>
+                <div class="icon-circle-sm" style="background: var(--semantic-info-bg); color: var(--cyan); margin: 0 auto 4px;">
+                    <i class="bi bi-car-front fs-5"></i>
+                </div>
+                <div class="h3 fw-bold mb-0" style="color: var(--cyan);">{{ total_spots }}</div>
                 <div class="text-muted small text-nowrap">Vagas totais</div>
             </div>
         </div>
     </div>
-    <div class="col-4 col-lg-2">
-        <div class="card shadow border-0 text-center h-100">
+    <div class="col-4 col-lg-2 animate-fade-in delay-5">
+        <div class="card text-center h-100 card-hover-lift">
             <div class="card-body">
-                <i class="bi bi-people fs-1 pulse-icon" style="color: var(--bs-warning);"></i>
-                <div class="display-5 fw-bold text-warning">{{ occupied_total }}</div>
+                <div class="icon-circle-sm" style="background: var(--semantic-warning-bg); color: var(--amber); margin: 0 auto 4px;">
+                    <i class="bi bi-people fs-5"></i>
+                </div>
+                <div class="h3 fw-bold mb-0" style="color: var(--amber);">{{ occupied_total }}</div>
                 <div class="text-muted small text-nowrap">Posições ocupadas</div>
             </div>
         </div>
     </div>
-    <div class="col-4 col-lg-2">
-        <div class="card shadow border-0 text-center h-100">
+    <div class="col-4 col-lg-2 animate-fade-in delay-6">
+        <div class="card text-center h-100 card-hover-lift">
             <div class="card-body">
-                <i class="bi bi-car-front-fill fs-1 pulse-icon" style="color: var(--bs-danger);"></i>
-                <div class="display-5 fw-bold text-danger">{{ parking_occupied_count }}</div>
+                <div class="icon-circle-sm gradient-rose text-white mx-auto mb-1">
+                    <i class="bi bi-car-front-fill fs-5"></i>
+                </div>
+                <div class="h3 fw-bold mb-0" style="color: var(--rose);">{{ parking_occupied_count }}</div>
                 <div class="text-muted small text-nowrap">Vagas ocupadas</div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="row g-3 mb-4">
+<div class="row g-3 mb-4 animate-fade-in delay-4">
     <div class="col-12">
-        <div class="card shadow border-0">
-            <div class="card-header bg-white fw-semibold">
+        <div class="card">
+            <div class="card-header">
                 <i class="bi bi-info-circle"></i> Disponibilidade hoje
             </div>
             <div class="card-body">
-                <div class="row text-start text-sm-center">
-                    <div class="col-4 border-end">
+                <div class="row text-start text-sm-center g-3">
+                    <div class="col-4">
                         <div class="fw-semibold mb-2">Manhã</div>
-                        <div>
+                        <div class="d-flex flex-wrap justify-content-sm-center gap-2">
                             <span class="badge bg-{% if available_morning > 0 %}success{% else %}danger{% endif %} fs-5 px-3 py-2">{{ available_morning }}</span>
-                            <span class="text-muted small ms-1">posições</span>
+                            <span class="text-muted small d-flex align-items-center">posições</span>
                             <span class="badge bg-{% if available_spots_morning > 0 %}info{% else %}secondary{% endif %} fs-5 px-3 py-2">{{ available_spots_morning }}</span>
-                            <span class="text-muted small ms-1">vagas</span>
+                            <span class="text-muted small d-flex align-items-center">vagas</span>
                         </div>
                     </div>
-                    <div class="col-4 border-end">
+                    <div class="col-4">
                         <div class="fw-semibold mb-2">Tarde</div>
-                        <div>
+                        <div class="d-flex flex-wrap justify-content-sm-center gap-2">
                             <span class="badge bg-{% if available_afternoon > 0 %}success{% else %}danger{% endif %} fs-5 px-3 py-2">{{ available_afternoon }}</span>
-                            <span class="text-muted small ms-1">posições</span>
+                            <span class="text-muted small d-flex align-items-center">posições</span>
                             <span class="badge bg-{% if available_spots_afternoon > 0 %}info{% else %}secondary{% endif %} fs-5 px-3 py-2">{{ available_spots_afternoon }}</span>
-                            <span class="text-muted small ms-1">vagas</span>
+                            <span class="text-muted small d-flex align-items-center">vagas</span>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="fw-semibold mb-2">Dia inteiro</div>
-                        <div>
+                        <div class="d-flex flex-wrap justify-content-sm-center gap-2">
                             <span class="badge bg-{% if available_full_day > 0 %}success{% else %}danger{% endif %} fs-5 px-3 py-2">{{ available_full_day }}</span>
-                            <span class="text-muted small ms-1">posições</span>
+                            <span class="text-muted small d-flex align-items-center">posições</span>
                             <span class="badge bg-{% if available_spots_full_day > 0 %}info{% else %}secondary{% endif %} fs-5 px-3 py-2">{{ available_spots_full_day }}</span>
-                            <span class="text-muted small ms-1">vagas</span>
+                            <span class="text-muted small d-flex align-items-center">vagas</span>
                         </div>
                     </div>
                 </div>
@@ -113,14 +115,14 @@
     </div>
 </div>
 
-<div class="row g-3">
+<div class="row g-3 animate-fade-in delay-5">
     <div class="col-md-8">
-        <div class="card shadow border-0">
-            <div class="card-header bg-white fw-semibold"><i class="bi bi-calendar-day"></i> Reservas de hoje</div>
+        <div class="card">
+            <div class="card-header"><i class="bi bi-calendar-day"></i> Reservas de hoje</div>
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0 small">
-                        <thead class="table-light">
+                        <thead>
                             <tr><th>Usuário</th><th>Período</th><th>Sala</th><th>Posição</th><th>Vaga</th><th></th></tr>
                         </thead>
                         <tbody>
@@ -143,17 +145,17 @@
         </div>
     </div>
     <div class="col-md-4">
-        <div class="card shadow border-0">
-            <div class="card-header bg-white fw-semibold"><i class="bi bi-exclamation-triangle"></i> Últimas falhas de e-mail</div>
+        <div class="card">
+            <div class="card-header"><i class="bi bi-exclamation-triangle"></i> Últimas falhas de e-mail</div>
             <div class="card-body p-0">
                 <ul class="list-group list-group-flush small">
                     {% for log in recent_failures %}
-                    <li class="list-group-item">
+                    <li class="list-group-item" style="border-color: var(--border-soft);">
                         <div class="text-truncate">{{ log.recipient }}</div>
                         <div class="text-muted">{{ log.created_at|date:'d/m/Y H:i' }}</div>
                     </li>
                     {% empty %}
-                    <li class="list-group-item text-muted text-center">Nenhuma falha recente.</li>
+                    <li class="list-group-item text-muted text-center" style="border-color: var(--border-soft);">Nenhuma falha recente.</li>
                     {% endfor %}
                 </ul>
             </div>

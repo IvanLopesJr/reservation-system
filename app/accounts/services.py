@@ -59,10 +59,11 @@ class UserProfileService:
 
     @staticmethod
     def create_profile(user, created_by_admin=True):
-        UserProfile.objects.get_or_create(
+        profile, _ = UserProfile.objects.get_or_create(
             user=user,
             defaults={'created_by_admin': created_by_admin},
         )
+        return profile
 
     @staticmethod
     def complete_first_access(user):

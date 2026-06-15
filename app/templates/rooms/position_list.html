@@ -4,46 +4,47 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold mb-0"><i class="bi bi-grid-3x3"></i> Posições: {{ room.name }}</h4>
+    <h4 class="fw-bold mb-0" style="color: var(--app-primary);"><i class="bi bi-grid-3x3"></i> Posições: {{ room.name }}</h4>
     <div>
-        <a href="{% url 'rooms:room_list' %}" class="btn btn-outline-secondary btn-sm me-2"><i class="bi bi-arrow-left"></i> Salas</a>
+        <a href="{% url 'rooms:room_list' %}" class="btn btn-outline-primary btn-sm me-2"><i class="bi bi-arrow-left"></i> Salas</a>
         <a href="{% url 'rooms:position_create' room.id %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nova posição</a>
     </div>
 </div>
 
-<div class="card shadow border-0">
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr><th>Código</th><th>Descrição</th><th>Status</th><th class="text-end">Ações</th></tr>
-                </thead>
-                <tbody>
-                    {% for p in positions %}
-                    <tr>
-                        <td class="fw-semibold">{{ p.code }}</td>
-                        <td class="text-muted small">{{ p.description|default:'-' }}</td>
-                        <td>
-                            {% if p.status == 'available' %}<span class="badge bg-success">Disponível</span>
-                            {% elif p.status == 'blocked' %}<span class="badge bg-warning text-dark">Bloqueada</span>
-                            {% else %}<span class="badge bg-danger">Inativa</span>{% endif %}
-                        </td>
-                        <td class="text-end">
-                            <div class="btn-group btn-group-sm">
-                                <a href="{% url 'rooms:position_update' room.id p.id %}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i></a>
-                                <form method="post" action="{% url 'rooms:position_toggle_status' room.id p.id %}" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-outline-secondary" title="Alterar status"><i class="bi bi-arrow-repeat"></i></button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr><td colspan="4" class="text-center text-muted py-4">Nenhuma posição cadastrada.</td></tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<div class="row g-2">
+    {% for p in positions %}
+    <div class="col-lg-2 col-md-3 col-4 animate-fade-in delay-{{ forloop.counter }}">
+        <div class="card text-center h-100">
+            <div class="card-body py-3">
+                <div class="fw-semibold mb-1">{{ p.code }}</div>
+                <span class="badge bg-{% if p.status == 'available' %}success{% elif p.status == 'blocked' %}warning{% else %}secondary{% endif %}">
+                    {% if p.status == 'available' %}Disponível{% elif p.status == 'blocked' %}Bloqueada{% else %}Inativa{% endif %}
+                </span>
+                {% if p.description %}
+                <div class="text-muted small mt-1">{{ p.description|truncatechars:30 }}</div>
+                {% endif %}
+            </div>
+            <div class="card-footer bg-transparent border-top" style="border-color: var(--border-soft);">
+                <div class="btn-group btn-group-sm w-100">
+                    <a href="{% url 'rooms:position_update' room.id p.id %}" class="btn btn-outline-primary"><i class="bi bi-pencil"></i></a>
+                    <form method="post" action="{% url 'rooms:position_toggle_status' room.id p.id %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-arrow-repeat"></i></button>
+                    </form>
+                    <a href="{% url 'rooms:position_delete' room.id p.id %}" class="btn btn-outline-danger"><i class="bi bi-trash"></i></a>
+                </div>
+            </div>
         </div>
     </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="bi bi-grid-3x3 display-3" style="color: var(--text-tertiary);"></i>
+                <p class="text-muted mt-3 mb-0">Nenhuma posição cadastrada.</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}

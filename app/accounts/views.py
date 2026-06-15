@@ -164,7 +164,9 @@ def user_create_view(request):
             user.is_staff = form.cleaned_data.get('is_staff', False)
             user.set_password(form.cleaned_data['password'])
             user.save()
-            UserProfileService.create_profile(user, created_by_admin=True)
+            profile = UserProfileService.create_profile(user, created_by_admin=True)
+            profile.can_use_parking = form.cleaned_data.get('can_use_parking', True)
+            profile.save()
             UserProfileService.complete_first_access(user)
             AuditService.log_user_created(user, request.user, request)
 
@@ -198,10 +200,18 @@ def user_update_view(request, user_id):
             user = form.save(commit=False)
             user.is_staff = form.cleaned_data.get('is_staff', False)
             user.save()
+            profile = getattr(user, 'profile', None)
+            if profile:
+                profile.can_use_parking = form.cleaned_data.get('can_use_parking', True)
+                profile.save()
             messages.success(request, f'Usuário {user.email} atualizado.')
             return redirect('accounts:user_list')
     else:
-        form = UserUpdateForm(instance=user, initial={'is_staff': user.is_staff})
+        initial = {'is_staff': user.is_staff}
+        profile = getattr(user, 'profile', None)
+        if profile:
+            initial['can_use_parking'] = profile.can_use_parking
+        form = UserUpdateForm(instance=user, initial=initial)
 
     return render(request, 'accounts/user_form.html', {'form': form, 'is_create': False, 'user_obj': user})
 

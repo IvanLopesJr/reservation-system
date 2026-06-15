@@ -1,5 +1,6 @@
 services:
   web:
+    container_name: reservation-system
     build: .
     ports:
       - "3001:3001"
@@ -7,10 +8,8 @@ services:
       - .env
     volumes:
       - ./app:/app
-      - sqlite_data:/app/data
-      - media_data:/app/media
+      - app_data:/app/data
     command: gunicorn config.wsgi:application --bind 0.0.0.0:3001 --workers 3 --reload
 
 volumes:
-  sqlite_data:
-  media_data:
+  app_data:

@@ -23,6 +23,7 @@ class SystemSettingsForm(forms.ModelForm):
             'smtp_use_tls', 'email_settings_active',
             'send_confirmation_email', 'send_cancellation_email',
             'show_app_name_navbar', 'show_app_name_login', 'show_app_name_footer',
+            'use_offcanvas_nav',
         ]
         widgets = {
             'app_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -51,6 +52,7 @@ class SystemSettingsForm(forms.ModelForm):
             'email_settings_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'send_confirmation_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'send_cancellation_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'use_offcanvas_nav': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
         labels = {
             'app_name': 'Nome da aplicação',
@@ -69,6 +71,7 @@ class SystemSettingsForm(forms.ModelForm):
             'show_app_name_navbar': 'Exibir nome na barra de navegação',
             'show_app_name_login': 'Exibir nome na tela de login',
             'show_app_name_footer': 'Exibir nome no rodapé',
+            'use_offcanvas_nav': 'Usar menu offcanvas no celular',
             'email_sender_name': 'Nome do remetente',
             'email_sender_address': 'E-mail remetente',
             'email_reply_to': 'E-mail de resposta',

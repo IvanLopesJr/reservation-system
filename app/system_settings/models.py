@@ -1,3 +1,4 @@
+import os
 import re
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -9,8 +10,6 @@ def validate_hex_color(value):
 
 
 def validate_image(value):
-    import os
-    from django.core.exceptions import ValidationError
     ext = os.path.splitext(value.name)[1].lower()
     valid_extensions = ['.png', '.jpg', '.jpeg', '.svg', '.ico']
     if ext not in valid_extensions:
@@ -35,10 +34,10 @@ class SystemSettings(models.Model):
         upload_to='login/', blank=True, null=True,
         validators=[validate_image], verbose_name='Imagem de login'
     )
-    primary_color = models.CharField(max_length=7, default='#0d6efd', validators=[validate_hex_color], verbose_name='Cor primária')
-    secondary_color = models.CharField(max_length=7, default='#6c757d', validators=[validate_hex_color], verbose_name='Cor secundária')
-    background_color = models.CharField(max_length=7, default='#f8f9fa', validators=[validate_hex_color], verbose_name='Cor de fundo')
-    navbar_bg_color = models.CharField(max_length=7, default='#0d6efd', validators=[validate_hex_color], verbose_name='Cor da barra de navegação')
+    primary_color = models.CharField(max_length=7, default='#4f46e5', validators=[validate_hex_color], verbose_name='Cor primária')
+    secondary_color = models.CharField(max_length=7, default='#f43f5e', validators=[validate_hex_color], verbose_name='Cor secundária')
+    background_color = models.CharField(max_length=7, default='#f8fafc', validators=[validate_hex_color], verbose_name='Cor de fundo')
+    navbar_bg_color = models.CharField(max_length=7, default='#4f46e5', validators=[validate_hex_color], verbose_name='Cor da barra de navegação')
     navbar_text_color = models.CharField(max_length=7, default='#ffffff', validators=[validate_hex_color], verbose_name='Cor do texto da barra de navegação')
     welcome_text = models.TextField(
         blank=True, default='Bem-vindo ao Sistema de Reservas', verbose_name='Texto de boas-vindas'
@@ -48,6 +47,7 @@ class SystemSettings(models.Model):
     show_app_name_navbar = models.BooleanField(default=True, verbose_name='Exibir nome na barra de navegação')
     show_app_name_login = models.BooleanField(default=True, verbose_name='Exibir nome na tela de login')
     show_app_name_footer = models.BooleanField(default=True, verbose_name='Exibir nome no rodapé')
+    use_offcanvas_nav = models.BooleanField(default=True, verbose_name='Usar menu offcanvas no celular')
 
     email_sender_name = models.CharField(max_length=100, blank=True, verbose_name='Nome do remetente')
     email_sender_address = models.EmailField(blank=True, verbose_name='E-mail remetente')

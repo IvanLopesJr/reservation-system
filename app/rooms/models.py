@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models.deletion import ProtectedError
 
 
 class Room(models.Model):
@@ -15,17 +14,6 @@ class Room(models.Model):
 
     def __str__(self):
         return self.name
-
-    def delete(self, *args, **kwargs):
-        from django.db.models.deletion import Collector
-        collector = Collector(using='default')
-        collector.collect([self])
-        if collector.protected:
-            raise ProtectedError(
-                'Não é possível excluir esta sala pois existem reservas vinculadas a ela.',
-                collector.protected
-            )
-        return super().delete(*args, **kwargs)
 
 
 class RoomPosition(models.Model):

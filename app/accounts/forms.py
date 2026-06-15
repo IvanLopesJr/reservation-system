@@ -79,6 +79,10 @@ class UserCreateForm(forms.ModelForm):
         label='Administrador', required=False,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
+    can_use_parking = forms.BooleanField(
+        label='Pode usar estacionamento', required=False, initial=True,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
 
     class Meta:
         model = User
@@ -108,6 +112,10 @@ class UserCreateForm(forms.ModelForm):
 class UserUpdateForm(forms.ModelForm):
     is_staff = forms.BooleanField(
         label='Administrador', required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    can_use_parking = forms.BooleanField(
+        label='Pode usar estacionamento', required=False,
         widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
 

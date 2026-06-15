@@ -24,6 +24,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     first_access_completed = models.BooleanField(default=False, verbose_name='Primeiro acesso concluído')
     created_by_admin = models.BooleanField(default=True, verbose_name='Criado por administrador')
+    can_use_parking = models.BooleanField(default=True, verbose_name='Pode usar estacionamento')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

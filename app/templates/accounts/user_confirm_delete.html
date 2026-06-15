@@ -5,14 +5,14 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-lg-6 col-xl-5">
-        <div class="card shadow border-0">
-            <div class="card-header bg-danger text-white">
+        <div class="card animate-fade-in">
+            <div class="card-header" style="background-color: var(--semantic-error); color: white;">
                 <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Excluir Usuário</h5>
             </div>
             <div class="card-body">
                 <p class="fw-bold">Tem certeza que deseja excluir permanentemente este usuário?</p>
 
-                <div class="bg-light rounded p-3 mb-3">
+                <div class="rounded p-3 mb-3" style="background-color: var(--warm-100);">
                     <div class="mb-1"><strong>Nome:</strong> {{ user_obj.get_full_name|default:'-' }}</div>
                     <div class="mb-1"><strong>E-mail:</strong> {{ user_obj.email }}</div>
                     <div class="mb-1"><strong>Cadastro:</strong> {{ user_obj.date_joined|date:'d/m/Y H:i' }}</div>
@@ -26,7 +26,7 @@
                     <strong>{{ active_count }} reserva{{ active_count|pluralize:'s' }} ativa{{ active_count|pluralize:'s' }}</strong>.
                     Cancele as reservas antes de excluir.
                 </div>
-                <a href="{% url 'accounts:user_list' %}" class="btn btn-secondary">
+                <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left"></i> Voltar
                 </a>
                 {% else %}
@@ -39,7 +39,7 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="d-flex gap-2">
-                        <a href="{% url 'accounts:user_list' %}" class="btn btn-secondary">
+                        <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">
                             <i class="bi bi-x-lg"></i> Cancelar
                         </a>
                         <button type="submit" class="btn btn-danger">

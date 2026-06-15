@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p /app/data /app/media
+RUN mkdir -p /app/data/media
 
 COPY app/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh

@@ -18,8 +18,8 @@
 
     <div class="row g-4">
         <div class="col-md-6 d-flex flex-column">
-            <div class="card shadow border-0 flex-fill">
-                <div class="card-header bg-white fw-semibold"><i class="bi bi-brush"></i> Identidade visual</div>
+            <div class="card flex-fill animate-fade-in delay-1">
+                <div class="card-header fw-semibold"><i class="bi bi-brush"></i> Identidade visual</div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -52,6 +52,12 @@
                         <div class="form-check">{{ form.show_app_name_navbar }} <label for="{{ form.show_app_name_navbar.id_for_label }}">{{ form.show_app_name_navbar.label }}</label></div>
                         <div class="form-check">{{ form.show_app_name_login }} <label for="{{ form.show_app_name_login.id_for_label }}">{{ form.show_app_name_login.label }}</label></div>
                         <div class="form-check">{{ form.show_app_name_footer }} <label for="{{ form.show_app_name_footer.id_for_label }}">{{ form.show_app_name_footer.label }}</label></div>
+                    </div>
+
+                    <hr>
+                    <div class="fw-semibold small mb-2">Navegação</div>
+                    <div class="d-flex gap-3 mb-2 flex-wrap">
+                        <div class="form-check">{{ form.use_offcanvas_nav }} <label for="{{ form.use_offcanvas_nav.id_for_label }}">{{ form.use_offcanvas_nav.label }}</label></div>
                     </div>
 
                     <div class="row">
@@ -126,8 +132,8 @@
         </div>
 
         <div class="col-md-6 d-flex flex-column">
-            <div class="card shadow border-0 flex-fill">
-                <div class="card-header bg-white fw-semibold"><i class="bi bi-envelope"></i> E-mail e SMTP</div>
+            <div class="card flex-fill animate-fade-in delay-2">
+                <div class="card-header fw-semibold"><i class="bi bi-envelope"></i> E-mail e SMTP</div>
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="{{ form.support_email.id_for_label }}">{{ form.support_email.label }}</label>
@@ -223,7 +229,7 @@
     </div>
 
     <div class="d-flex gap-2 mt-4 mb-5">
-        <button type="submit" class="btn btn-primary" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+        <button type="submit" class="btn btn-primary">
             <i class="bi bi-check-lg"></i> Salvar configurações
         </button>
     </div>
