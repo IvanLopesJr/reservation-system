@@ -10,7 +10,9 @@ from accounts.models import UserProfile
 User = get_user_model()
 if not User.objects.filter(is_superuser=True).exists():
     user = User.objects.create_superuser(email='admin@exemplo.com', password='admin123')
-    UserProfile.objects.create(user=user, first_access_completed=True, created_by_admin=True)
+    profile, _ = UserProfile.objects.get_or_create(user=user)
+    profile.first_access_completed = True
+    profile.save()
     print('Admin user created')
 else:
     print('Admin user already exists')
