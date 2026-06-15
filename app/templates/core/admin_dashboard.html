@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel administrativo{% endblock %}
+
+{% block extra_head %}
+<style>
+@keyframes soft-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.08); }
+}
+.pulse-icon { animation: soft-pulse 2s ease-in-out infinite; display: inline-block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold mb-4" style="color: var(--app-primary);"><i class="bi bi-speedometer2"></i> Painel administrativo</h4>
+
+<div class="row g-3 mb-4">
+    <div class="col-4 col-lg-2">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-calendar-check fs-1 pulse-icon" style="color: var(--app-primary);"></i>
+                <div class="display-5 fw-bold" style="color: var(--app-primary);">{{ today_reservations.count }}</div>
+                <div class="text-muted small text-nowrap">Reservas hoje</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-people fs-1 pulse-icon" style="color: var(--bs-indigo);"></i>
+                <div class="display-5 fw-bold" style="color: var(--bs-indigo);">{{ users_today }}</div>
+                <div class="text-muted small text-nowrap">Usuários hoje</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-layout-three-columns fs-1 pulse-icon" style="color: var(--bs-success);"></i>
+                <div class="display-5 fw-bold text-success">{{ total_positions }}</div>
+                <div class="text-muted small text-nowrap">Posições totais</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-car-front fs-1 pulse-icon" style="color: var(--bs-info);"></i>
+                <div class="display-5 fw-bold text-info">{{ total_spots }}</div>
+                <div class="text-muted small text-nowrap">Vagas totais</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-people fs-1 pulse-icon" style="color: var(--bs-warning);"></i>
+                <div class="display-5 fw-bold text-warning">{{ occupied_total }}</div>
+                <div class="text-muted small text-nowrap">Posições ocupadas</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-4 col-lg-2">
+        <div class="card shadow border-0 text-center h-100">
+            <div class="card-body">
+                <i class="bi bi-car-front-fill fs-1 pulse-icon" style="color: var(--bs-danger);"></i>
+                <div class="display-5 fw-bold text-danger">{{ parking_occupied_count }}</div>
+                <div class="text-muted small text-nowrap">Vagas ocupadas</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-12">
+        <div class="card shadow border-0">
+            <div class="card-header bg-white fw-semibold">
+                <i class="bi bi-info-circle"></i> Disponibilidade hoje
+            </div>
+            <div class="card-body">
+                <div class="row text-start text-sm-center">
+                    <div class="col-4 border-end">
+                        <div class="fw-semibold mb-2">Manhã</div>
+                        <div>
+                            <span class="badge bg-{% if available_morning > 0 %}success{% else %}danger{% endif %} fs-5 px-3 py-2">{{ available_morning }}</span>
+                            <span class="text-muted small ms-1">posições</span>
+                            <span class="badge bg-{% if available_spots_morning > 0 %}info{% else %}secondary{% endif %} fs-5 px-3 py-2">{{ available_spots_morning }}</span>
+                            <span class="text-muted small ms-1">vagas</span>
+                        </div>
+                    </div>
+                    <div class="col-4 border-end">
+                        <div class="fw-semibold mb-2">Tarde</div>
+                        <div>
+                            <span class="badge bg-{% if available_afternoon > 0 %}success{% else %}danger{% endif %} fs-5 px-3 py-2">{{ available_afternoon }}</span>
+                            <span class="text-muted small ms-1">posições</span>
+                            <span class="badge bg-{% if available_spots_afternoon > 0 %}info{% else %}secondary{% endif %} fs-5 px-3 py-2">{{ available_spots_afternoon }}</span>
+                            <span class="text-muted small ms-1">vagas</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="fw-semibold mb-2">Dia inteiro</div>
+                        <div>
+                            <span class="badge bg-{% if available_full_day > 0 %}success{% else %}danger{% endif %} fs-5 px-3 py-2">{{ available_full_day }}</span>
+                            <span class="text-muted small ms-1">posições</span>
+                            <span class="badge bg-{% if available_spots_full_day > 0 %}info{% else %}secondary{% endif %} fs-5 px-3 py-2">{{ available_spots_full_day }}</span>
+                            <span class="text-muted small ms-1">vagas</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-8">
+        <div class="card shadow border-0">
+            <div class="card-header bg-white fw-semibold"><i class="bi bi-calendar-day"></i> Reservas de hoje</div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 small">
+                        <thead class="table-light">
+                            <tr><th>Usuário</th><th>Período</th><th>Sala</th><th>Posição</th><th>Vaga</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            {% for r in today_reservations %}
+                            <tr>
+                                <td>{{ r.user.get_full_name|default:r.user.email }}</td>
+                                <td><span class="badge bg-info text-dark">{{ r.get_period_display }}</span></td>
+                                <td>{{ r.room_position.room.name }}</td>
+                                <td>{{ r.room_position.code }}</td>
+                                <td>{{ r.parking_spot.code|default:'-' }}</td>
+                                <td><a href="{% url 'booking:reservation_detail' r.id %}"><i class="bi bi-eye"></i></a></td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="7" class="text-center text-muted py-3">Nenhuma reserva para hoje.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow border-0">
+            <div class="card-header bg-white fw-semibold"><i class="bi bi-exclamation-triangle"></i> Últimas falhas de e-mail</div>
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush small">
+                    {% for log in recent_failures %}
+                    <li class="list-group-item">
+                        <div class="text-truncate">{{ log.recipient }}</div>
+                        <div class="text-muted">{{ log.created_at|date:'d/m/Y H:i' }}</div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item text-muted text-center">Nenhuma falha recente.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

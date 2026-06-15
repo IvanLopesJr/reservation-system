@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes da reserva{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-4" style="color: var(--app-primary);"><i class="bi bi-calendar-check"></i> Detalhes da reserva</h4>
+
+                <dl class="row">
+                    <dt class="col-sm-4 text-muted">Data</dt>
+                    <dd class="col-sm-8">{{ reservation.reservation_date|date:'d/m/Y' }}</dd>
+
+                    <dt class="col-sm-4 text-muted">Período</dt>
+                    <dd class="col-sm-8"><span class="badge bg-info text-dark">{{ reservation.get_period_display }}</span></dd>
+
+                    <dt class="col-sm-4 text-muted">Sala</dt>
+                    <dd class="col-sm-8">{{ reservation.room_position.room.name }}</dd>
+
+                    <dt class="col-sm-4 text-muted">Posição</dt>
+                    <dd class="col-sm-8 fw-semibold">{{ reservation.room_position.code }}</dd>
+
+                    <dt class="col-sm-4 text-muted">Vaga</dt>
+                    <dd class="col-sm-8">{{ reservation.parking_spot.code|default:'Não reservada' }}</dd>
+
+                    <dt class="col-sm-4 text-muted">Status</dt>
+                    <dd class="col-sm-8">
+                        {% if reservation.status == 'active' %}<span class="badge bg-success">Ativa</span>
+                        {% elif reservation.status == 'cancelled' %}<span class="badge bg-secondary">Cancelada</span>
+                        {% else %}<span class="badge bg-dark">Finalizada</span>{% endif %}
+                    </dd>
+
+                    <dt class="col-sm-4 text-muted">Criada em</dt>
+                    <dd class="col-sm-8">{{ reservation.created_at|date:'d/m/Y H:i' }}</dd>
+
+                    {% if reservation.cancelled_at %}
+                    <dt class="col-sm-4 text-muted">Cancelada em</dt>
+                    <dd class="col-sm-8">{{ reservation.cancelled_at|date:'d/m/Y H:i' }}</dd>
+
+                    <dt class="col-sm-4 text-muted">Motivo</dt>
+                    <dd class="col-sm-8">{{ reservation.cancellation_reason|default:'Não informado' }}</dd>
+                    {% endif %}
+
+                    <dt class="col-sm-4 text-muted">Usuário</dt>
+                    <dd class="col-sm-8">{{ reservation.user.get_full_name|default:reservation.user.email }}</dd>
+                </dl>
+
+                <div class="d-flex gap-2 mt-4">
+                    <a href="{% if user.is_staff %}{% url 'booking:admin_reservations' %}{% else %}{% url 'booking:my_reservations' %}{% endif %}"
+                       class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Voltar</a>
+                    {% if reservation.status == 'active' %}
+                        <a href="{% url 'booking:reservation_cancel' reservation.id %}" class="btn btn-outline-danger"><i class="bi bi-x-circle"></i> Cancelar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

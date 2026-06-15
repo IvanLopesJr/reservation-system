@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block title %}Configurações do sistema{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold mb-4" style="color: var(--app-primary);"><i class="bi bi-palette"></i> Configurações do sistema</h4>
+
+<form method="post" enctype="multipart/form-data" novalidate id="settings-form">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="alert alert-danger py-2 small">
+            {% for error in form.non_field_errors %}
+                <div>{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="row g-4">
+        <div class="col-md-6 d-flex flex-column">
+            <div class="card shadow border-0 flex-fill">
+                <div class="card-header bg-white fw-semibold"><i class="bi bi-brush"></i> Identidade visual</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.app_name.id_for_label }}" class="form-label">{{ form.app_name.label }}</label>
+                            {{ form.app_name }}
+                            {% if form.app_name.errors %}<div class="text-danger small mt-1">{{ form.app_name.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.app_base_url.id_for_label }}" class="form-label">{{ form.app_base_url.label }}</label>
+                            {{ form.app_base_url }}
+                            {% if form.app_base_url.errors %}<div class="text-danger small mt-1">{{ form.app_base_url.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.welcome_text.id_for_label }}" class="form-label">{{ form.welcome_text.label }}</label>
+                        {{ form.welcome_text }}
+                        {% if form.welcome_text.errors %}<div class="text-danger small mt-1">{{ form.welcome_text.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.organization_name.id_for_label }}" class="form-label">{{ form.organization_name.label }}</label>
+                        {{ form.organization_name }}
+                        {% if form.organization_name.errors %}<div class="text-danger small mt-1">{{ form.organization_name.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <hr>
+                    <div class="fw-semibold small mb-2">Visibilidade do nome</div>
+                    <div class="d-flex gap-3 mb-2 flex-wrap">
+                        <div class="form-check">{{ form.show_app_name_navbar }} <label for="{{ form.show_app_name_navbar.id_for_label }}">{{ form.show_app_name_navbar.label }}</label></div>
+                        <div class="form-check">{{ form.show_app_name_login }} <label for="{{ form.show_app_name_login.id_for_label }}">{{ form.show_app_name_login.label }}</label></div>
+                        <div class="form-check">{{ form.show_app_name_footer }} <label for="{{ form.show_app_name_footer.id_for_label }}">{{ form.show_app_name_footer.label }}</label></div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.logo.id_for_label }}" class="form-label form-label-sm">{{ form.logo.label }}</label>
+                            {% if settings_obj.logo %}<div class="mb-1"><img src="{{ settings_obj.logo.url }}" alt="Logo" style="max-height: 50px;" class="border rounded p-1"></div>{% endif %}
+                            {{ form.logo }}
+                            {% if form.logo.errors %}<div class="text-danger small mt-1">{{ form.logo.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.favicon.id_for_label }}" class="form-label form-label-sm">{{ form.favicon.label }}</label>
+                            {% if settings_obj.favicon %}<div class="mb-1"><img src="{{ settings_obj.favicon.url }}" alt="Favicon" style="max-height: 32px;" class="border rounded p-1"></div>{% endif %}
+                            {{ form.favicon }}
+                            {% if form.favicon.errors %}<div class="text-danger small mt-1">{{ form.favicon.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.login_image.id_for_label }}" class="form-label">{{ form.login_image.label }}</label>
+                        {% if settings_obj.login_image %}<div class="mb-1"><img src="{{ settings_obj.login_image.url }}" alt="Login background" style="max-height: 80px; width: 100%; object-fit: cover;" class="border rounded p-1"></div>{% endif %}
+                        {{ form.login_image }}
+                        {% if form.login_image.errors %}<div class="text-danger small mt-1">{{ form.login_image.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-4 mb-3">
+                            <label for="{{ form.primary_color.id_for_label }}" class="form-label form-label-sm">{{ form.primary_color.label }}</label>
+                            <div class="d-flex align-items-center gap-1">
+                                {{ form.primary_color }}
+                                <span class="badge" style="background-color: {{ form.primary_color.value|default:'#0d6efd' }}; width: 28px; height: 28px;"></span>
+                            </div>
+                            {% if form.primary_color.errors %}<div class="text-danger small mt-1">{{ form.primary_color.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-4 mb-3">
+                            <label for="{{ form.secondary_color.id_for_label }}" class="form-label form-label-sm">{{ form.secondary_color.label }}</label>
+                            <div class="d-flex align-items-center gap-1">
+                                {{ form.secondary_color }}
+                                <span class="badge" style="background-color: {{ form.secondary_color.value|default:'#6c757d' }}; width: 28px; height: 28px;"></span>
+                            </div>
+                            {% if form.secondary_color.errors %}<div class="text-danger small mt-1">{{ form.secondary_color.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-4 mb-3">
+                            <label for="{{ form.background_color.id_for_label }}" class="form-label form-label-sm">{{ form.background_color.label }}</label>
+                            <div class="d-flex align-items-center gap-1">
+                                {{ form.background_color }}
+                                <span class="badge" style="background-color: {{ form.background_color.value|default:'#f8f9fa' }}; width: 28px; height: 28px; border: 1px solid #ccc;"></span>
+                            </div>
+                            {% if form.background_color.errors %}<div class="text-danger small mt-1">{{ form.background_color.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 mb-3">
+                            <label for="{{ form.navbar_bg_color.id_for_label }}" class="form-label form-label-sm">{{ form.navbar_bg_color.label }}</label>
+                            <div class="d-flex align-items-center gap-1">
+                                {{ form.navbar_bg_color }}
+                                <span class="badge" style="background-color: {{ form.navbar_bg_color.value|default:'#0d6efd' }}; width: 28px; height: 28px;"></span>
+                            </div>
+                            {% if form.navbar_bg_color.errors %}<div class="text-danger small mt-1">{{ form.navbar_bg_color.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-4 mb-3">
+                            <label for="{{ form.navbar_text_color.id_for_label }}" class="form-label form-label-sm">{{ form.navbar_text_color.label }}</label>
+                            <div class="d-flex align-items-center gap-1">
+                                {{ form.navbar_text_color }}
+                                <span class="badge" style="background-color: {{ form.navbar_text_color.value|default:'#ffffff' }}; width: 28px; height: 28px; border: 1px solid #ccc;"></span>
+                            </div>
+                            {% if form.navbar_text_color.errors %}<div class="text-danger small mt-1">{{ form.navbar_text_color.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-4 mb-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 d-flex flex-column">
+            <div class="card shadow border-0 flex-fill">
+                <div class="card-header bg-white fw-semibold"><i class="bi bi-envelope"></i> E-mail e SMTP</div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="{{ form.support_email.id_for_label }}">{{ form.support_email.label }}</label>
+                        {{ form.support_email }}
+                        {% if form.support_email.errors %}<div class="text-danger small mt-1">{{ form.support_email.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.email_sender_name.id_for_label }}">{{ form.email_sender_name.label }}</label>
+                            {{ form.email_sender_name }}
+                            {% if form.email_sender_name.errors %}<div class="text-danger small mt-1">{{ form.email_sender_name.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.email_sender_address.id_for_label }}">{{ form.email_sender_address.label }}</label>
+                            {{ form.email_sender_address }}
+                            {% if form.email_sender_address.errors %}<div class="text-danger small mt-1">{{ form.email_sender_address.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.email_reply_to.id_for_label }}">{{ form.email_reply_to.label }}</label>
+                        {{ form.email_reply_to }}
+                        {% if form.email_reply_to.errors %}<div class="text-danger small mt-1">{{ form.email_reply_to.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label for="{{ form.smtp_host.id_for_label }}">{{ form.smtp_host.label }}</label>
+                            {{ form.smtp_host }}
+                            {% if form.smtp_host.errors %}<div class="text-danger small mt-1">{{ form.smtp_host.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="{{ form.smtp_port.id_for_label }}">{{ form.smtp_port.label }}</label>
+                            {{ form.smtp_port }}
+                            {% if form.smtp_port.errors %}<div class="text-danger small mt-1">{{ form.smtp_port.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.smtp_username.id_for_label }}">{{ form.smtp_username.label }}</label>
+                        {{ form.smtp_username }}
+                        {% if form.smtp_username.errors %}<div class="text-danger small mt-1">{{ form.smtp_username.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.smtp_password.id_for_label }}">{{ form.smtp_password.label }}</label>
+                        {{ form.smtp_password }}
+                        <div class="form-text">{{ form.smtp_password.help_text }}</div>
+                        {% if form.smtp_password.errors %}<div class="text-danger small mt-1">{{ form.smtp_password.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <div class="d-flex gap-3 mb-2">
+                        <div class="form-check"><input type="hidden" name="smtp_use_tls" value="false">{{ form.smtp_use_tls }} <label for="{{ form.smtp_use_tls.id_for_label }}">{{ form.smtp_use_tls.label }}</label></div>
+                        <div class="form-check">{{ form.email_settings_active }} <label for="{{ form.email_settings_active.id_for_label }}">{{ form.email_settings_active.label }}</label></div>
+                    </div>
+                    <div class="form-text">Porta 465 = SSL; demais portas = TLS. Desmarcado = sem criptografia.</div>
+
+                    <hr>
+                    <div class="fw-semibold small mb-2">Notificações</div>
+                    <div class="d-flex gap-3 mb-2">
+                        <div class="form-check">{{ form.send_confirmation_email }} <label for="{{ form.send_confirmation_email.id_for_label }}">{{ form.send_confirmation_email.label }}</label></div>
+                        <div class="form-check">{{ form.send_cancellation_email }} <label for="{{ form.send_cancellation_email.id_for_label }}">{{ form.send_cancellation_email.label }}</label></div>
+                    </div>
+                    {% if form.smtp_use_tls.errors %}<div class="text-danger small mt-1">{{ form.smtp_use_tls.errors.0 }}</div>{% endif %}
+                    {% if form.email_settings_active.errors %}<div class="text-danger small mt-1">{{ form.email_settings_active.errors.0 }}</div>{% endif %}
+
+                    <hr>
+
+                    <div class="mb-3">
+                        <label class="form-label">Testar configuração SMTP</label>
+                        <div class="input-group">
+                            <input type="email" name="smtp_test_to_email" class="form-control" placeholder="teste@exemplo.com" required>
+                            <button type="button" class="btn btn-outline-primary"
+                                    hx-post="{% url 'system_settings:smtp_test_config' %}"
+                                    hx-include="#settings-form"
+                                    hx-encoding="multipart/form-data"
+                                    hx-target="#smtp-test-result"
+                                    hx-swap="innerHTML">
+                                <i class="bi bi-send"></i> Testar
+                            </button>
+                        </div>
+                        <div id="smtp-test-result" class="mt-2"></div>
+                        <div class="form-text">Testa as configurações com os dados acima, sem salvar.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex gap-2 mt-4 mb-5">
+        <button type="submit" class="btn btn-primary" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+            <i class="bi bi-check-lg"></i> Salvar configurações
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.querySelectorAll('input[type="color"]').forEach(input => {
+        input.addEventListener('input', function() {
+            const badge = this.closest('.d-flex').querySelector('.badge');
+            if (badge) badge.style.backgroundColor = this.value;
+        });
+    });
+</script>
+{% endblock %}

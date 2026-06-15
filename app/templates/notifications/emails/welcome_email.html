@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"></head>
+<body style="font-family: Arial, sans-serif; padding: 20px; background: #f8f9fa;">
+    <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; padding: 30px;">
+        <h2 style="color: #0d6efd;">{{ app_name }}</h2>
+        <p>Olá, <strong>{{ user.get_full_name|default:user.email }}</strong>!</p>
+        <p>Sua conta foi criada com sucesso no <strong>{{ app_name }}</strong>.</p>
+        <p>Utilize os dados abaixo para acessar o sistema:</p>
+        <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 20px; margin: 20px 0;">
+            <p style="margin: 5px 0;"><strong>Acesso:</strong> {{ email }}</p>
+            <p style="margin: 5px 0;"><strong>Senha:</strong> {{ password }}</p>
+        </div>
+        <p style="text-align: center; margin: 30px 0;">
+            <a href="{{ app_base_url|default:'http://localhost:8000' }}" style="background: #0d6efd; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+                Acessar o sistema
+            </a>
+        </p>
+        <p><small>Recomendamos que você altere sua senha após o primeiro acesso.</small></p>
+        {% if support_email %}
+            <p><small>Precisa de ajuda? Contate {{ support_email }}</small></p>
+        {% endif %}
+        {% if organization_name %}
+        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+        <p style="color: #6c757d; font-size: 12px; margin: 0;">{{ organization_name }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

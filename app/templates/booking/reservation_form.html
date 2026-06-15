@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+
+{% block title %}Nova reserva{% endblock %}
+
+{% block content %}
+<h4 class="fw-bold mb-4" style="color: var(--app-primary);"><i class="bi bi-plus-circle"></i> Nova reserva</h4>
+
+<div class="card shadow border-0">
+    <div class="card-body p-4">
+        <form method="post" id="reservation-form" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="room-select" class="form-label">Sala</label>
+                    <select id="room-select" class="form-select" required>
+                        <option value="">--- Selecione ---</option>
+                        {% for room in rooms %}
+                            <option value="{{ room.id }}">{{ room.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="date-input" class="form-label">Data</label>
+                    <input type="date" id="date-input" class="form-control" required min="{{ min_date }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="period-select" class="form-label">Período</label>
+                    <select id="period-select" class="form-select" required>
+                        <option value="">--- Selecione ---</option>
+                        <option value="morning">Manhã</option>
+                        <option value="afternoon">Tarde</option>
+                        <option value="full_day">Dia inteiro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-4" id="positions-container" style="display:none;">
+                <label class="form-label fw-semibold">Posições disponíveis</label>
+                <div id="positions-list" class="row g-2"></div>
+                <input type="hidden" name="room_position" id="id_room_position">
+            </div>
+
+            <div class="mt-3" id="parking-toggle" style="display:none;">
+                <div class="form-check">
+                    <input type="checkbox" id="wants-parking" class="form-check-input">
+                    <label for="wants-parking" class="form-check-label">Quero vaga de estacionamento</label>
+                </div>
+            </div>
+
+            <div class="mt-3" id="parking-container" style="display:none;">
+                <label class="form-label fw-semibold">Vagas disponíveis</label>
+                <div id="parking-list" class="row g-2"></div>
+                <input type="hidden" name="parking_spot" id="id_parking_spot">
+            </div>
+
+            <div class="mt-3" id="parking-unavailable" style="display:none;">
+                <p class="text-muted small mb-0"><i class="bi bi-car-front-fill"></i> Vaga de estacionamento não disponível.</p>
+            </div>
+
+            <div class="mt-4" id="submit-container" style="display:none;">
+                <button type="submit" class="btn btn-primary" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+                    <i class="bi bi-check-circle"></i> Confirmar reserva
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const roomSelect = document.getElementById('room-select');
+    const dateInput = document.getElementById('date-input');
+    const periodSelect = document.getElementById('period-select');
+    const positionsContainer = document.getElementById('positions-container');
+    const positionsList = document.getElementById('positions-list');
+    const parkingToggle = document.getElementById('parking-toggle');
+    const parkingContainer = document.getElementById('parking-container');
+    const parkingList = document.getElementById('parking-list');
+    const wantsParking = document.getElementById('wants-parking');
+    const submitContainer = document.getElementById('submit-container');
+    const parkingUnavailable = document.getElementById('parking-unavailable');
+    const roomPositionInput = document.getElementById('id_room_position');
+    const parkingSpotInput = document.getElementById('id_parking_spot');
+
+    let selectedPosition = null;
+    let selectedParking = null;
+
+    function loadPositions() {
+        const room = roomSelect.value;
+        const date = dateInput.value;
+        const period = periodSelect.value;
+        if (!room || !date || !period) {
+            positionsContainer.style.display = 'none';
+            parkingToggle.style.display = 'none';
+            parkingContainer.style.display = 'none';
+            parkingUnavailable.style.display = 'none';
+            submitContainer.style.display = 'none';
+            return;
+        }
+
+        fetch(`{% url 'booking:available_positions' %}?room=${room}&date=${date}&period=${period}`)
+            .then(r => r.json())
+            .then(data => {
+                positionsList.innerHTML = '';
+                const hasAvailable = data.positions.some(p => p.status === 'available');
+                data.positions.forEach(p => {
+                    const isOccupied = p.status === 'occupied';
+                    const col = document.createElement('div');
+                    col.className = 'col-lg-2 col-md-3 col-6';
+                    const cardClass = isOccupied
+                        ? 'bg-danger bg-opacity-10'
+                        : 'bg-success bg-opacity-10 border-success border-opacity-25' + (selectedPosition === p.id ? ' border-primary' : '');
+                    const cardStyle = isOccupied
+                        ? 'opacity:0.6;cursor:not-allowed;'
+                        : 'cursor:pointer;' + (selectedPosition === p.id ? 'border-width:2px;' : '');
+                    col.innerHTML = `
+                        <div class="card position-card ${cardClass}"
+                             style="${cardStyle}"
+                             data-id="${p.id}"
+                             onclick="${isOccupied ? '' : 'selectPosition(' + p.id + ', this)'}">
+                            <div class="card-body text-center py-1">
+                                <div class="fw-semibold small">${p.code}</div>
+                                ${isOccupied
+                                    ? '<small class="text-danger">' + p.user + '<br>(' + p.period + ')<br><i class="bi bi-car-front-fill' + (p.parking_code ? '' : '" style="opacity:0.4"') + '"></i> ' + (p.parking_code ? p.parking_code : '0') + '</small>'
+                                    : '<small class="text-success" style="opacity:0.7">(Disponível)</small>'
+                                }
+                            </div>
+                        </div>`;
+                    positionsList.appendChild(col);
+                });
+                if (!hasAvailable) {
+                    const msg = document.createElement('div');
+                    msg.className = 'col-12';
+                    msg.innerHTML = '<p class="text-muted mt-2">Nenhuma posição disponível para este período.</p>';
+                    positionsList.appendChild(msg);
+                }
+                positionsContainer.style.display = 'block';
+                if (selectedPosition) {
+                    parkingToggle.style.display = 'block';
+                } else {
+                    parkingToggle.style.display = 'none';
+                    parkingContainer.style.display = 'none';
+                    submitContainer.style.display = 'none';
+                }
+            });
+    }
+
+    function selectPosition(id, el) {
+        selectedPosition = id;
+        roomPositionInput.value = id;
+        document.querySelectorAll('.position-card').forEach(c => {
+            c.classList.remove('border-primary');
+            c.classList.remove('bg-success', 'bg-opacity-10');
+            c.classList.add('border-success');
+            c.classList.add('bg-success', 'bg-opacity-10');
+        });
+        el.classList.remove('border-success');
+        el.classList.add('border-primary');
+        el.style.borderWidth = '2px';
+        wantsParking.checked = false;
+        parkingContainer.style.display = 'none';
+        parkingUnavailable.style.display = 'none';
+        checkParkingAvailability();
+        submitContainer.style.display = 'block';
+    }
+
+    function renderParkingSpots(spots) {
+        parkingList.innerHTML = '';
+        const hasAvailable = spots.some(s => s.status === 'available');
+        spots.forEach(s => {
+            const isOccupied = s.status === 'occupied';
+            const col = document.createElement('div');
+            col.className = 'col-lg-2 col-md-3 col-6';
+            const cardClass = isOccupied
+                ? 'bg-danger bg-opacity-10'
+                : 'bg-success bg-opacity-10 border-success border-opacity-25' + (selectedParking === s.id ? ' border-primary' : '');
+            const cardStyle = isOccupied
+                ? 'opacity:0.6;cursor:not-allowed;'
+                : 'cursor:pointer;' + (selectedParking === s.id ? 'border-width:2px;' : '');
+            col.innerHTML = `
+                <div class="card parking-card ${cardClass}"
+                     style="${cardStyle}"
+                     data-id="${s.id}"
+                     onclick="${isOccupied ? '' : 'selectParking(' + s.id + ', this)'}">
+                    <div class="card-body text-center py-1">
+                        <div class="fw-semibold small">${s.code}</div>
+                        ${isOccupied
+                            ? '<small class="text-danger">' + s.user + '<br>(' + s.period + ')</small>'
+                            : '<small class="text-success" style="opacity:0.7">(Disponível)</small>'
+                        }
+                    </div>
+                </div>`;
+            parkingList.appendChild(col);
+        });
+        if (!hasAvailable) {
+            const msg = document.createElement('div');
+            msg.className = 'col-12';
+            msg.innerHTML = '<p class="text-muted mt-2">Nenhuma vaga disponível.</p>';
+            parkingList.appendChild(msg);
+        }
+        parkingContainer.style.display = 'block';
+    }
+
+    function checkParkingAvailability() {
+        const date = dateInput.value;
+        const period = periodSelect.value;
+        fetch(`{% url 'booking:available_parking_spots' %}?date=${date}&period=${period}`)
+            .then(r => r.json())
+            .then(data => {
+                const hasAvailable = data.spots.some(s => s.status === 'available');
+                if (hasAvailable) {
+                    parkingToggle.style.display = 'block';
+                    parkingUnavailable.style.display = 'none';
+                    parkingContainer.style.display = 'none';
+                    wantsParking.checked = false;
+                    selectedParking = null;
+                    parkingSpotInput.value = '';
+                } else {
+                    parkingToggle.style.display = 'none';
+                    parkingContainer.style.display = 'none';
+                    parkingUnavailable.style.display = 'block';
+                    selectedParking = null;
+                    parkingSpotInput.value = '';
+                    wantsParking.checked = false;
+                }
+            });
+    }
+
+    function loadParkingSpots() {
+        const date = dateInput.value;
+        const period = periodSelect.value;
+        fetch(`{% url 'booking:available_parking_spots' %}?date=${date}&period=${period}`)
+            .then(r => r.json())
+            .then(data => renderParkingSpots(data.spots));
+    }
+
+    function selectParking(id, el) {
+        selectedParking = id;
+        parkingSpotInput.value = id;
+        document.querySelectorAll('.parking-card').forEach(c => {
+            c.classList.remove('border-primary');
+            c.classList.remove('bg-success', 'bg-opacity-10');
+            c.classList.add('border-success');
+            c.classList.add('bg-success', 'bg-opacity-10');
+        });
+        el.classList.remove('border-success');
+        el.classList.add('border-primary');
+        el.style.borderWidth = '2px';
+    }
+
+    roomSelect.addEventListener('change', loadPositions);
+    dateInput.addEventListener('change', loadPositions);
+    periodSelect.addEventListener('change', loadPositions);
+
+    wantsParking.addEventListener('change', function() {
+        if (this.checked) {
+            loadParkingSpots();
+        } else {
+            parkingContainer.style.display = 'none';
+            selectedParking = null;
+            parkingSpotInput.value = '';
+        }
+    });
+
+    document.getElementById('reservation-form').addEventListener('submit', function(e) {
+        if (!selectedPosition) {
+            e.preventDefault();
+            alert('Selecione uma posição.');
+            return;
+        }
+        const roomPositionField = document.createElement('input');
+        roomPositionField.type = 'hidden';
+        roomPositionField.name = 'room_position';
+        roomPositionField.value = selectedPosition;
+        this.appendChild(roomPositionField);
+
+        if (wantsParking.checked && selectedParking) {
+            const parkingField = document.createElement('input');
+            parkingField.type = 'hidden';
+            parkingField.name = 'parking_spot';
+            parkingField.value = selectedParking;
+            this.appendChild(parkingField);
+        }
+
+        const dateField = document.createElement('input');
+        dateField.type = 'hidden';
+        dateField.name = 'reservation_date';
+        dateField.value = dateInput.value;
+        this.appendChild(dateField);
+
+        const periodField = document.createElement('input');
+        periodField.type = 'hidden';
+        periodField.name = 'period';
+        periodField.value = periodSelect.value;
+        this.appendChild(periodField);
+
+        const wantsField = document.createElement('input');
+        wantsField.type = 'hidden';
+        wantsField.name = 'wants_parking';
+        wantsField.value = wantsParking.checked ? 'on' : '';
+        this.appendChild(wantsField);
+    });
+</script>
+{% endblock %}

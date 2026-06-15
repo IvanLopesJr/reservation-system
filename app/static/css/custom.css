@@ -1,0 +1,95 @@
+:root {
+    --app-primary: #0d6efd;
+    --app-secondary: #6c757d;
+    --app-background: #f8f9fa;
+}
+
+body {
+    background-color: var(--app-background);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.card {
+    border-radius: 12px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0,0,0,.08) !important;
+}
+
+.btn {
+    border-radius: 8px;
+    transition: all 0.15s ease;
+}
+
+.btn-primary {
+    background-color: var(--app-primary);
+    border-color: var(--app-primary);
+}
+
+.btn-primary:hover {
+    filter: brightness(1.1);
+}
+
+.btn-outline-primary {
+    color: var(--app-primary);
+    border-color: var(--app-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--app-primary);
+    border-color: var(--app-primary);
+    color: white;
+}
+
+.navbar {
+    box-shadow: 0 2px 10px rgba(0,0,0,.1);
+}
+
+.badge {
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--app-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
+input[type="color"] {
+    width: 48px;
+    height: 38px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.table > thead {
+    border-bottom: 2px solid var(--app-primary);
+}
+
+.fade-in {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+[x-cloak] { display: none !important; }
+
+@media (max-width: 768px) {
+    .btn-group {
+        display: flex;
+        gap: 4px;
+    }
+    .table {
+        font-size: 0.85rem;
+    }
+}

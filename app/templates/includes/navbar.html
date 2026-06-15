@@ -1,0 +1,56 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark mb-4" style="background-color: var(--app-navbar-bg);">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'core:dashboard' %}" style="color: var(--app-navbar-text);">
+            {% if app_settings.logo %}
+                <img src="{{ app_settings.logo.url }}" alt="{{ app_settings.app_name }}" height="32" class="me-2">
+            {% endif %}
+            {% if app_settings.show_app_name_navbar %}{{ app_settings.app_name|default:'Sistema de Reservas' }}{% endif %}
+        </a>
+        {% if user.is_authenticated %}
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'booking:reservation_create' %}" style="color: var(--app-navbar-text);">
+                        <i class="bi bi-plus-circle"></i> Nova reserva
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'booking:my_reservations' %}" style="color: var(--app-navbar-text);">
+                        <i class="bi bi-list-check"></i> Minhas reservas
+                    </a>
+                </li>
+                {% if user.is_staff %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" style="color: var(--app-navbar-text);">
+                        <i class="bi bi-gear"></i> Administrar
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'accounts:user_list' %}"><i class="bi bi-people"></i> Usuários</a></li>
+                        <li><a class="dropdown-item" href="{% url 'rooms:room_list' %}"><i class="bi bi-building"></i> Salas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'parking:parking_spot_list' %}"><i class="bi bi-car-front"></i> Vagas</a></li>
+                        <li><a class="dropdown-item" href="{% url 'booking:admin_reservations' %}"><i class="bi bi-calendar-check"></i> Reservas</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{% url 'system_settings:settings' %}"><i class="bi bi-palette"></i> Configurações</a></li>
+                        <li><a class="dropdown-item" href="{% url 'audit:audit_log_list' %}"><i class="bi bi-journal-text"></i> Auditoria</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" style="color: var(--app-navbar-text);">
+                        <i class="bi bi-person-circle"></i> {{ user.get_full_name|default:user.email }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{% url 'accounts:password_change' %}"><i class="bi bi-key"></i> Alterar senha</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="{% url 'accounts:logout' %}"><i class="bi bi-box-arrow-right"></i> Sair</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</nav>

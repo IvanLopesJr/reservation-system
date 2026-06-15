@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login{% if app_settings.show_app_name_login %} - {{ app_settings.app_name|default:'Sistema de Reservas' }}{% endif %}{% endblock %}
+
+{% block navbar %}{% endblock %}
+{% block footer %}{% endblock %}
+
+{% block main %}
+<div class="d-flex align-items-center justify-content-center" style="min-height: 100vh;{% if app_settings.login_image %} background: url('{{ app_settings.login_image.url }}') center/cover no-repeat;{% endif %}">
+    <div class="row justify-content-center w-100 mx-0" style="max-width: 400px;">
+        <div class="col-12">
+        <div class="card shadow border-0"{% if app_settings.login_image %} style="background: rgba(255,255,255,0.92); backdrop-filter: blur(4px);"{% endif %}>
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    {% if app_settings.logo %}
+                        <img src="{{ app_settings.logo.url }}" alt="Logo" height="64" class="mb-3">
+                    {% endif %}
+                    {% if app_settings.show_app_name_login %}<h4 class="fw-bold" style="color: var(--app-primary);">{{ app_settings.app_name|default:'Sistema de Reservas' }}</h4>{% endif %}
+                    {% if app_settings.welcome_text %}
+                        <p class="text-muted small">{{ app_settings.welcome_text }}</p>
+                    {% endif %}
+                </div>
+
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                    {% for field in form %}
+                    {% if field.name != 'remember' %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="text-danger small mt-1">{{ field.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+
+                    <div class="form-check mb-3">
+                        {{ form.remember }}
+                        <label class="form-check-label" for="{{ form.remember.id_for_label }}">{{ form.remember.label }}</label>
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger py-2 small">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary w-100 fw-semibold" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+                        <i class="bi bi-box-arrow-in-right"></i> Entrar
+                    </button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a href="{% url 'accounts:password_reset' %}" class="text-decoration-none small">Esqueci minha senha</a>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}{% endblock %}

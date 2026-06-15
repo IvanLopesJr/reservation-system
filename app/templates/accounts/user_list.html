@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Usuários{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold mb-0"><i class="bi bi-people"></i> Usuários</h4>
+    <a href="{% url 'accounts:user_create' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Novo usuário</a>
+</div>
+
+<div class="card shadow border-0">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>E-mail</th>
+                        <th>Perfil</th>
+                        <th>Status</th>
+                        <th>1º acesso</th>
+                        <th>Último login</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>{{ u.get_full_name|default:'-' }}</td>
+                        <td>{{ u.email }}</td>
+                        <td>{% if u.is_staff %}<span class="badge bg-warning text-dark">Admin</span>{% else %}<span class="badge bg-secondary">Usuário</span>{% endif %}</td>
+                        <td>{% if u.is_active %}<span class="badge bg-success">Ativo</span>{% else %}<span class="badge bg-danger">Inativo</span>{% endif %}</td>
+                        <td>{% if u.profile.first_access_completed %}<span class="badge bg-success">Sim</span>{% else %}<span class="badge bg-warning text-dark">Não</span>{% endif %}</td>
+                        <td class="small">{{ u.last_login|date:'d/m/Y H:i'|default:'-' }}</td>
+                        <td class="text-end">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'accounts:user_update' u.id %}" class="btn btn-outline-primary" title="Editar"><i class="bi bi-pencil"></i></a>
+                                <form method="post" action="{% url 'accounts:user_toggle_active' u.id %}" class="d-inline" onsubmit="return confirm('Confirmar {% if u.is_active %}inativação{% else %}ativação{% endif %} de {{ u.email }}?')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-{% if u.is_active %}danger{% else %}success{% endif %}" title="{% if u.is_active %}Inativar{% else %}Ativar{% endif %}">
+                                        <i class="bi {% if u.is_active %}bi-pause-circle{% else %}bi-play-circle{% endif %}"></i>
+                                    </button>
+                                </form>
+                                {% if not u.profile.first_access_completed %}
+                                <form method="post" action="{% url 'accounts:resend_invitation' u.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-info" title="Reenviar convite"><i class="bi bi-send"></i></button>
+                                </form>
+                                {% endif %}
+                                {% if not u.last_login and u.profile.first_access_completed %}
+                                <form method="post" action="{% url 'accounts:resend_credentials' u.id %}" class="d-inline" onsubmit="return confirm('Reenviar credenciais para {{ u.email }}? Uma nova senha será gerada.')">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-warning" title="Reenviar credenciais"><i class="bi bi-key"></i></button>
+                                </form>
+                                {% endif %}
+                                <a href="{% url 'accounts:user_delete' u.id %}" class="btn btn-outline-danger" title="Excluir"><i class="bi bi-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">Nenhum usuário cadastrado.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

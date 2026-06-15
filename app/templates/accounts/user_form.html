@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_create %}Novo usuário{% else %}Editar usuário{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-6">
+        <div class="card shadow border-0">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-4" style="color: var(--app-primary);">
+                    {% if is_create %}<i class="bi bi-person-plus"></i> Novo usuário{% else %}<i class="bi bi-pencil"></i> Editar usuário{% endif %}
+                </h4>
+
+                <form method="post" novalidate{% if is_create %}
+                    x-data="{
+                        generatePassword() {
+                            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+                            let pwd = '';
+                            for (let i = 0; i < 12; i++) pwd += chars.charAt(Math.floor(Math.random() * chars.length));
+                            const pwdEl = document.getElementById('id_password');
+                            const confirmEl = document.getElementById('id_password_confirm');
+                            pwdEl.value = pwd;
+                            confirmEl.value = pwd;
+                            pwdEl.type = 'text';
+                            confirmEl.type = 'text';
+                        }
+                    }"{% endif %}>
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label">{{ form.first_name.label }}</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}<div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label">{{ form.last_name.label }}</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}<div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.email.id_for_label }}" class="form-label">{{ form.email.label }}</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    {% if is_create %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.password.id_for_label }}" class="form-label">{{ form.password.label }}</label>
+                            {{ form.password }}
+                            {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="{{ form.password_confirm.id_for_label }}" class="form-label">{{ form.password_confirm.label }}</label>
+                            {{ form.password_confirm }}
+                            {% if form.password_confirm.errors %}<div class="text-danger small mt-1">{{ form.password_confirm.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" @click="generatePassword()">
+                            <i class="bi bi-shuffle"></i> Gerar senha aleatória
+                        </button>
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="form-check">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}</label>
+                            </div>
+                            {% if form.is_active.errors %}<div class="text-danger small mt-1">{{ form.is_active.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-3 col-6 mb-3">
+                            <div class="form-check">
+                                {{ form.is_staff }}
+                                <label class="form-check-label" for="{{ form.is_staff.id_for_label }}">{{ form.is_staff.label }}</label>
+                            </div>
+                            {% if form.is_staff.errors %}<div class="text-danger small mt-1">{{ form.is_staff.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+
+                    {% if is_create %}
+                    <div class="mb-3">
+                        <div class="form-check">
+                            {{ form.send_credentials }}
+                            <label class="form-check-label" for="{{ form.send_credentials.id_for_label }}">{{ form.send_credentials.label }}</label>
+                        </div>
+                        {% if form.send_credentials.help_text %}<div class="form-text">{{ form.send_credentials.help_text }}</div>{% endif %}
+                        {% if form.send_credentials.errors %}<div class="text-danger small mt-1">{{ form.send_credentials.errors.0 }}</div>{% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger py-2 small">
+                            {% for error in form.non_field_errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+                            <i class="bi bi-check-lg"></i> {% if is_create %}Criar{% else %}Salvar{% endif %}
+                        </button>
+                        <a href="{% url 'accounts:user_list' %}" class="btn btn-outline-secondary">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
