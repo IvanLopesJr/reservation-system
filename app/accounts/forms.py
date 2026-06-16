@@ -14,7 +14,7 @@ class LoginForm(forms.Form):
     )
     password = forms.CharField(
         label='Senha',
-        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Sua senha'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Sua senha', 'style': 'padding-right: 44px;'})
     )
     remember = forms.BooleanField(
         label='Lembre-me', required=False,

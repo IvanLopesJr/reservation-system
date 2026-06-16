@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('form[novalidate]').forEach(function(form) {
+    document.querySelectorAll('form[novalidate]:not(.js-skip-validation)').forEach(function(form) {
         form.querySelectorAll('.form-control, .form-select').forEach(function(input) {
             input.addEventListener('blur', function() {
                 validateField(this);
