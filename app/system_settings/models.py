@@ -69,15 +69,14 @@ class SystemSettings(models.Model):
         verbose_name_plural = 'Configurações do sistema'
 
     def save(self, *args, **kwargs):
-        if self.smtp_use_tls and self.smtp_use_ssl:
+        if self.smtp_port == 465 and self.smtp_use_tls:
+            self.smtp_use_tls = False
+            self.smtp_use_ssl = True
+        elif self.smtp_port != 465 and self.smtp_use_ssl:
             self.smtp_use_ssl = False
-        if self.smtp_port == 465:
-            if self.smtp_use_tls:
-                self.smtp_use_tls = False
-                self.smtp_use_ssl = True
-            else:
-                self.smtp_use_ssl = False
-        elif self.smtp_use_ssl:
+        elif not self.smtp_use_tls:
+            self.smtp_use_ssl = False
+        if self.smtp_use_tls and self.smtp_use_ssl:
             self.smtp_use_ssl = False
         super().save(*args, **kwargs)
 
