@@ -91,6 +91,7 @@ class SystemSettingsForm(forms.ModelForm):
         if cleaned_data.get('smtp_use_tls'):
             if port == 465:
                 cleaned_data['smtp_use_tls'] = False
+                cleaned_data['smtp_use_ssl'] = True
         else:
             if 'smtp_use_tls' not in self.data:
                 cleaned_data.pop('smtp_use_tls', None)
